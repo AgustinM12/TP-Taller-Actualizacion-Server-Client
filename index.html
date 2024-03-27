@@ -16,7 +16,7 @@
             <button id="btn-client"
                 class="p-3 rounded-md bg-blue-500 hover:bg-blue-300 text-white font-semi-bold transition-colors duration-300 border-slate-300 focus:ring ring-3 shadow-xl w-32 mr-2">Saludar</button>
 
-                <button id="btn-server"
+            <button id="btn-server"
                 class="p-3 rounded-md bg-blue-500 hover:bg-blue-300 text-white font-semi-bold transition-colors duration-300 border-slate-300 focus:ring ring-3 shadow-xl w-32 ml-2">Solicitud</button>
         </section>
 
@@ -24,13 +24,13 @@
 
             <div class="p-10 bg-blue-200 border-blue-500 rounded-md border-2 text-center">
                 <h2>Profesores</h2>
-                <ul>
+                <ul id="profesores">
                 </ul>
             </div>
 
             <div class="p-10 bg-blue-200 border-blue-500 rounded-md border-2 text-center">
                 <h2>Alumnos</h2>
-                <ul>
+                <ul id="alumnos">
                 </ul>
             </div>
         </section>
@@ -38,11 +38,42 @@
 
     <script>
         const btn_client = document.getElementById('btn-client');
+        const btn_server = document.getElementById('btn-server');
+        const ul_alumnos = document.getElementById('alumnos');
+        const ul_profesores = document.getElementById('profesores');
 
         btn_client.addEventListener('click', () => {
             alert("Hola desde el cliente")
         })
 
+        async function peticionFetch() {
+            const resAlumnos = await fetch('http://192.168.16.98:3000/api/students')
+            const { data: dataAlumnos } = await resAlumnos.json()
+
+            const resProfesores = await fetch('http://192.168.16.98:3000/api/teachers')
+            const { data: dataProfesores } = await resProfesores.json()
+            
+            ul_alumnos.innerHTML = ""
+            dataAlumnos.forEach((element, index) => {
+                ul_alumnos.innerHTML += `<li>${element[index].nombre}  ${element[index].apellido}, Calificacion: ${element[index].calificacion} </li>`
+            });
+
+            ul_profesores.innerHTML = ""
+            dataProfesores.forEach((element, index) => {
+                ul_profesores.innerHTML += `<li>${element[index].nombre}  ${element[index].apellido}, Materia:  ${element[index].materia} </li>`
+            });
+        }
+
+        btn_server.addEventListener('click', async () => {
+            try {
+                await peticionFetch()
+            }
+            catch (error) {
+                console.log(error)
+                alert("Error al solicitar los datos", error)
+            }
+
+        })
 
     </script>
 
