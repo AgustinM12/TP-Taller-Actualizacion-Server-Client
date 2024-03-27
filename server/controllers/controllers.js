@@ -6,7 +6,7 @@ export const getStudents = async (req,res)=>{
         if(!students){
             return res.status(404).json({message: 'aun no se cargaron alumnos!'});
         };
-        return res.json({students});
+        return res.json({data:students});
     } catch (error) {
         console.log(error);
         return res.status(500).json({message:'error interno del servidor!'});
@@ -20,6 +20,7 @@ export const getTeachers = async (req,res)=>{
         if(!teachers){
             return res.status(404).json({message: 'aun no se cargaron profesores!'});
         }
+        return res.status(200).json({data: teachers});
     } catch (error) {
         console.log(error);
         return res.status(500).json({message:'error interno del servidor!'});
